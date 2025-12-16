@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>中国教育考试网</title>
+  <style>
+    :root{
+      --nav1:#1f6fb5;
+      --nav2:#145a98;
+      --bg:#f4f6f9;
+      --card:#ffffff;
+      --line:#e9edf2;
+      --text:#1a1a1a;
+      --muted:#8a8f98;
+      --tab:#4b93da;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
+    .app{max-width:480px;margin:0 auto;min-height:100vh}
+
+    /* 顶部栏 */
+    .nav{
+      position:sticky;top:0;z-index:10;
+      height:56px;
+      padding:env(safe-area-inset-top) 12px 0;
+      background:linear-gradient(180deg,var(--nav1),var(--nav2));
+      display:flex;align-items:center;gap:10px;
+      color:#fff;
+      box-shadow:0 2px 10px rgba(0,0,0,.08);
+    }
+    .back{
+      width:34px;height:34px;border-radius:999px;
+      display:grid;place-items:center;
+      background:rgba(255,255,255,.16);
+      user-select:none;
+    }
+    .title{
+      flex:1;text-align:center;
+      font-weight:700;font-size:16px;letter-spacing:.5px;
+      padding-right:34px; /* 对齐 back */
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    }
+
+    /* 主标题 */
+    .hero{
+      background:#fff;
+      padding:18px 16px 8px;
+      text-align:center;
+      /* border-bottom:1px solid var(--line); */
+    }
+    .hero h1{
+      margin:6px 0 6px;
+      font-size:20px;
+      font-weight:900;
+    }
+    .hero .sub{
+      color:var(--muted);
+      font-size:13px;
+      margin:0 0 10px;
+    }
+
+    /* tab */
+    .tabs{
+      background:#fff;
+      padding:10px 16px 0;
+      display:flex;
+      justify-content:flex-start;
+    }
+    .tab{
+      padding:10px 18px;
+      border-radius:14px;
+      background:var(--tab);
+      color:#fff;
+      font-weight:800;
+      font-size:14px;
+      box-shadow:0 10px 20px rgba(75,147,218,.25);
+    }
+
+    /* 头像 */
+    .photo{
+      background:#fff;
+      padding:16px 16px 8px;
+      display:flex;
+      justify-content:center;
+      border-bottom:1px solid var(--line);
+    }
+    .avatar{
+      width:108px;height:138px;
+      border-radius:10px;
+      overflow:hidden;
+      background:#eef2f7;
+      border:1px solid #d9e1ea;
+      box-shadow:0 12px 24px rgba(0,0,0,.06);
+    }
+    .avatar img{width:100%;height:100%;object-fit:cover;display:block}
+	.avatar{
+	  margin-top: -10px;   /* 负 margin，精调位置 */
+	}
+
+
+    /* 信息卡 */
+    .card{
+      position:relative;
+      margin:14px;
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:14px;
+      overflow:hidden;
+      box-shadow:0 10px 24px rgba(0,0,0,.05);
+    }
+    /* 轻水印（非官方，纯装饰） */
+    .wm{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      pointer-events:none;
+      z-index:0;
+    }
+    
+    .wm img{
+      width: 320px;           /* 控制大小（改这里） */
+      max-width: 80%;
+      opacity: 0.06;          /* 水印透明度 */
+      transform: rotate(0deg); /* 控制方向（角度） */
+    }
+
+    .rows{position:relative;z-index:1}
+    .row{
+      display:flex;
+      gap:12px;
+      padding:14px 14px;
+      border-bottom:1px solid var(--line);
+      align-items:center;
+    }
+    .row:last-child{border-bottom:none}
+    .label{
+      width:92px;
+      font-weight:700;
+      letter-spacing: 5px;   /* 关键：从 6px → 2px */
+      color:#2b2f36;
+      flex:0 0 auto;
+    }
+
+    .value{
+      flex:1;
+      text-align:right;
+      font-size:15px;
+      color:#1b1f24;
+      word-break:break-all;
+    }
+    .muted{color:var(--muted)}
+    .footer{
+      padding:4px 14px 18px;
+      color:#98a1abz;
+      font-size:12px;
+      text-align:center;
+      line-height:1.6;
+    }
+	/* 成绩分项细节 */
+	.score-item {
+	  padding-top: 16px;
+	  padding-bottom: 16px;
+	}
+	
+	/* 成绩分项：自然中文，不拉字 */
+	.score-item .label{
+	  letter-spacing: 0;        /* 像第二张图 */
+	  font-weight: 700;
+	}
+
+	
+	/* 权重说明 */
+	.score-item .ratio {
+	  font-size: 12px;
+	  font-weight: 600;
+	  color: #8a8f98;
+	  letter-spacing: 0;
+	}
+	
+	/* 分数更突出 */
+	.score-item .score {
+	  font-size: 15px;
+	  font-weight: 600;      /* 从 800 降下来 */
+	  color: #8a8f98;        /* 正文深灰，不是黑 */
+	}
+
+	/* 分项行：不使用证件式固定宽度 */
+	.score-item .label {
+	  width: auto;              /* 关键：取消 92px 限制 */
+	  letter-spacing: 2px;      /* 不要 6px，不然太散 */
+	  font-weight: 800;
+	}
+
+	.score-item .label {
+	  white-space: nowrap;      /* 防止听力 + 比例换行 */
+	}
+	
+	.score-item {
+	  padding-left: 100px;   /* 默认是 14px，这里往左收 */
+	}
+
+	.row .label {
+	  white-space: nowrap;
+	}
+	
+	/* 分项文字字距更紧，像正式成绩构成 */
+	.score-item .label {
+	  letter-spacing: 1px;   /* 比 2px 再稳一点 */
+	}
+
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <div class="nav">
+      <div class="back">‹</div>
+      <div class="title">中国教育考试网</div>
+    </div>
+
+    <section class="hero">
+      <h1>全国大学英语六级考试</h1>
+	  <h1>成绩报告单</h1>
+    </section>
+
+    <div class="tabs">
+      <div class="tab">核验信息</div>
+    </div>
+
+    <div class="photo">
+      <div class="avatar">
+        <img
+          src="./1.png"
+          referrerpolicy="no-referrer"
+          alt="头像"
+        />
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="wm"><img
+          src="./2.png"
+          referrerpolicy="no-referrer"
+        /></div>
+
+      <div class="rows">
+        <div class="row"><div class="label">姓 名</div><div class="value muted">黄琳浈</div></div>
+        <div class="row"><div class="label">身份证号</div><div class="value muted">441427200003092125</div></div>
+        <div class="row"><div class="label">学 校</div><div class="value muted">广州应用科技学院</div></div>
+        <div class="row"><div class="label">院 系</div><div class="value muted">外国语学院</div></div>
+        <div class="row"><div class="label">准考证</div><div class="value muted">441430221201108</div></div>
+        <div class="row"><div class="label">考试时间</div><div class="value muted">2022年6月</div></div>
+
+        <div class="row"><div class="label">总 分</div><div class="value muted">432</div></div>
+        <div class="row score-item">
+          <div class="label">听 力 <span class="ratio">(35%)</span></div>
+          <div class="value muted">157</div>
+        </div>
+        
+        <div class="row score-item">
+          <div class="label">阅 读 <span class="ratio">(35%)</span></div>
+          <div class="value muted">125</div>
+        </div>
+        
+        <div class="row score-item">
+          <div class="label">写作和翻译 <span class="ratio">(30%)</span></div>
+          <div class="value muted">150</div>
+        </div>
+
+
+        <div class="row"><div class="label">口试准考证号</div><div class="value muted">--</div></div>
+        <div class="row"><div class="label">口试等级</div><div class="value muted">--</div></div>
+        <div class="row"><div class="label">口试考试时间</div><div class="value muted">--</div></div>
+        <div class="row"><div class="label">成绩报告单编号</div><div class="value muted">221244143000484</div></div>
+        <div class="row"><div class="label">校 验 码</div><div class="value muted">FGZG ZMOL PZNS ZRUJ</div></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
